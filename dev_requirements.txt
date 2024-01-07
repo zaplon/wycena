@@ -1,0 +1,3 @@
+boto3==1.34.11
+factory_boy
+pytest==7.4.4

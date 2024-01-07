@@ -1,0 +1,5 @@
+openpyxl==3.1.2
+strawberry-graphql[fastapi]
+pydantic-settings
+pynamodb==5.5.1
+python-multipart
