@@ -2,6 +2,7 @@ import typing
 
 from pydantic import BaseModel
 
+from wycena.models.enums import QueryFilterType
 from wycena.settings import settings
 
 
@@ -13,7 +14,8 @@ class AddressMixin:
 
 
 class QueryFilter(BaseModel):
-    filter: str
+    field_name: str
+    filter_type: QueryFilterType
     value: str
 
 

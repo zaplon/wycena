@@ -55,9 +55,19 @@ class Transaction:
     number_of_rooms: strawberry.auto
 
 
-@strawberry.experimental.pydantic.input(model=models.QueryFilter, all_fields=True)
+@strawberry.enum
+class QueryFilterType(enum.Enum):
+    EQUAL = 'EQUAL'
+    GREATER_THAN = 'GREATER_THAN'
+    LOWER_THAN = 'LOWER_THAN'
+    IN = 'IN'
+
+
+@strawberry.experimental.pydantic.input(model=models.QueryFilter)
 class QueryFilter:
-    pass
+    value: strawberry.auto
+    field_name: strawberry.auto
+    filter_type: QueryFilterType
 
 
 @strawberry.experimental.pydantic.input(model=models.QueryOptions, all_fields=True)
