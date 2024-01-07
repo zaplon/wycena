@@ -1,0 +1,25 @@
+@import "_variables.scss";
+@import "_custom.scss";
+@import "../../../node_modules/bootstrap/scss/bootstrap";
+@import "_bootswatch.scss";
+
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;1,300;1,400&display=swap');
+
+body {
+  font-family: 'Open Sans', sans-serif;
+  background-color: #eaf1f1;
+}
+
+.container .card {
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 20px 25px -5px, rgba(0, 0, 0, 0.04) 0px 10px 10px -5px;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.card-header {
+  background-color: inherit;
+  border-bottom: none;
+  font-weight: bold;
+}
