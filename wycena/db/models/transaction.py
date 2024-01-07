@@ -15,7 +15,7 @@ class Transaction(Model):
     type = UnicodeAttribute()
     long = NumberAttribute()
     lat = NumberAttribute()
-    price = NumberAttribute()
+    price = NumberAttribute(range_key=True)
     area = NumberAttribute()
     transaction_date = UTCDateTimeAttribute()
     district = UnicodeAttribute(null=True)

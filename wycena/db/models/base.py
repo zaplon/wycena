@@ -18,5 +18,4 @@ class BaseModel(Model):
         for f in options.filters:
             if f.filter_type == QueryFilterType.EQUAL:
                 conditions &= getattr(self, f.field_name) == f.value
-        return self.query(conditions=conditions)
-
+        return self.query(conditions=conditions, limit=options.pageSize)
