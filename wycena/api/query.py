@@ -33,3 +33,9 @@ class Query:
     @strawberry.field
     def transactions(self, options: models.QueryOptions = None) -> PaginationWindow[models.Transaction]:
         return PaginationWindow(items=TransactionFactory.create_batch(10), total_pages=20)
+
+    @strawberry.field
+    def similar_transactions(self, lat: float, long: float,
+                             area: float, floor: int = None
+                             ) -> typing.List[models.Transaction]:
+        pass

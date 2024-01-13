@@ -1,5 +1,4 @@
 import datetime
-import enum
 import typing
 
 from pydantic import BaseModel
@@ -21,7 +20,6 @@ class Evaluation(BaseDBModel):
     phone_number: str
     price: float
     provider: str
-    register_number: str = None
     estimated_value: float = None
     vision_datetime: datetime.datetime = None
     photos: typing.List[Photo]

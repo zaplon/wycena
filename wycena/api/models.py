@@ -20,7 +20,7 @@ class PropertyType(enum.Enum):
 
 @strawberry.experimental.pydantic.type(model=models.Evaluation)
 class Evaluation:
-    address: strawberry.auto
+    address: int
     buyer: strawberry.auto
     type: PropertyType
     phone_number: strawberry.auto

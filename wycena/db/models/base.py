@@ -18,4 +18,9 @@ class BaseModel(Model):
         for f in options.filters:
             if f.filter_type == QueryFilterType.EQUAL:
                 conditions &= getattr(self, f.field_name) == f.value
-        return self.query(conditions=conditions, limit=options.pageSize)
+            elif f.filter_type == QueryFilterType.GREATER_THAN:
+                conditions &= getattr(self, f.field_name) > f.value
+            elif f.filter_type == QueryFilterType.LOWER_THAN:
+                conditions &= getattr(self, f.field_name) < f.value
+        return self.query(conditions=conditions, limit=options.pageSize,
+                          offset=options.page * options.pageSize)

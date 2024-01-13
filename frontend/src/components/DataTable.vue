@@ -9,6 +9,7 @@ const props = defineProps({
   totalPages: Number
 })
 const emit = defineEmits(["paginate", "sort", "filter"])
+const filters = []
 
 const paginationLimit = computed(() => {
   if (!props.page || !props.totalPages)
@@ -26,8 +27,14 @@ function sort(model) {
 function paginate(page) {
   emit("paginate", {page: page})
 }
-function filterData(e, column) {
-  emit("filter", {column: column, value: e.target.value})
+function filterData(e, column, op) {
+  let newFilter = {fieldName: column, value: e.target.value, filterType: op || "EQUAL"}
+  let index = filters.findIndex((e) => e.name === column)
+  if (index)
+    filters[index] = newFilter
+  else
+    filters.push(newFilter)
+  emit("filter", filters)
 }
 </script>
 <template>
@@ -47,7 +54,11 @@ function filterData(e, column) {
             <select class="form-select" v-if="col.filterOptions" @change="filterData(col.model)">
               <option v-for="o in col.filterOptions" value="o.value" :key="o.value">{{ o.name }}</option>
             </select>
-            <input type="text" class="form-control" v-else-if="col.type === 'text'" @change="filterData(col.model)">
+            <template v-else-if="col.rangeFilter">
+              <input type="text" class="form-control" placeholder="Od" @change="filterData(col.model, 'GREATER_THAN')">
+              <input type="text" class="form-control" placeholder="Do" @change="filterData(col.model, 'LOWER_THAN')">
+            </template>
+            <input type="text" class="form-control" v-else-if="col.type === 'text'" @change="filterData(col.model, 'LIKE')">
             <input type="number" class="form-control" v-else-if="col.type === 'number'" @change="filterData(col.model)">
           </template>
         </th>

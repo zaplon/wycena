@@ -9,8 +9,13 @@ import axios from "axios";
 import {useNotification} from "@kyvg/vue3-notification";
 
 const transactions = ref("")
+const queryOptions = ref({
+  sortBy: null,
+  filters: null,
+  page: 0
+})
 const {result} = useQuery(gql`
-      query getTransactions {
+      query getTransactions($options: queryOptions) {
         transactions {
           city
           street
@@ -20,7 +25,9 @@ const {result} = useQuery(gql`
           price
           provider
         }
-      }`)
+      }`, {
+  options: queryOptions
+})
 watch(result, () => {
   transactions.value = result.value.transactions
 })
@@ -41,11 +48,15 @@ function importTransactions() {
     })
   }).catch(()=> {})
 }
+function onDataFiltering(filters) {
+ queryOptions.value.filters = filters
+}
+
 
 const columns = [
   {name: "Miejscowość", sortable: true, model: "city", filterable: true, type: "text"},
   {name: "Ulica", sortable: true, model: "street", filterable: true, type: "text"},
-  {name: "Numer", sortable: false, model: "buildingNumber", filterable: true, type: "number"},
+  {name: "Numer", sortable: false, model: "buildingNumber", type: "number"},
   {
     name: "Typ nieruchomości", sortable: false, model: "type", filterable: true,
     filterOptions: [
@@ -56,7 +67,7 @@ const columns = [
   },
   {name: "Źródło", sortable: true, model: "provider"},
   {name: "Data transakcji", sortable: true, model: "transactionDatetime"},
-  {name: "Cena", sortable: true, model: "price", filterable: true},
+  {name: "Cena", sortable: true, model: "price", filterable: true, rangeFilter: true},
 ]
 </script>
 <template>
@@ -77,7 +88,8 @@ const columns = [
         <i class="bi bi-plus me-1"></i>
         Dodaj ręcznie
       </button>
-      <data-table :columns="columns" :rows="transactions || []" :add-actions-slot="true">
+      <data-table :columns="columns" :rows="transactions || []" :add-actions-slot="true"
+      @filter="onDataFiltering">
         <template v-slot:actions>
           <button class="btn btn-sm btn-danger">
             <i class="bi bi-trash"></i>
