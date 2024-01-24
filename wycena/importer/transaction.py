@@ -95,7 +95,7 @@ def get_coords(transaction: db_models.Transaction):
 
 FIELD_HANDLERS = {
     "street": (["ulica"], None),
-    "building_number": (["numer", "nr bud.", "numer budynku"], None),
+    "building_nr": (["numer", "nr bud.", "numer budynku"], None),
     "city": (["miejscowość", "miasto"], None),
     "district": (["dzielnica"], None),
     "floor": (["piętro", "pietro", "Kond."], handle_int),

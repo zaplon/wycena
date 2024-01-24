@@ -55,8 +55,8 @@ function filterData(e, column, op) {
               <option v-for="o in col.filterOptions" value="o.value" :key="o.value">{{ o.name }}</option>
             </select>
             <template v-else-if="col.rangeFilter">
-              <input type="text" class="form-control" placeholder="Od" @change="filterData(col.model, 'GREATER_THAN')">
-              <input type="text" class="form-control" placeholder="Do" @change="filterData(col.model, 'LOWER_THAN')">
+              <input type="text" class="form-control range-filter" placeholder="Od" @change="filterData(col.model, 'GREATER_THAN')">
+              <input type="text" class="form-control range-filter ms-1" placeholder="Do" @change="filterData(col.model, 'LOWER_THAN')">
             </template>
             <input type="text" class="form-control" v-else-if="col.type === 'text'" @change="filterData(col.model, 'LIKE')">
             <input type="number" class="form-control" v-else-if="col.type === 'number'" @change="filterData(col.model)">
@@ -96,3 +96,9 @@ function filterData(e, column, op) {
     </tfoot>
   </table>
 </template>
+<style scoped>
+ .range-filter {
+   width: 100px;
+   display: inline-block;
+ }
+</style>

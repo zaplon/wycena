@@ -84,10 +84,10 @@ const columns = [
         <i class="bi bi-cloud-upload me-1"></i>
         Import transakcji
       </button>
-      <button class="ms-1 btn btn-primary mb-2">
+      <router-link to="/transakcje/dodaj/" class="ms-1 btn btn-primary mb-2">
         <i class="bi bi-plus me-1"></i>
         Dodaj ręcznie
-      </button>
+      </router-link>
       <data-table :columns="columns" :rows="transactions || []" :add-actions-slot="true"
       @filter="onDataFiltering">
         <template v-slot:actions>

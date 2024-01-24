@@ -8,8 +8,8 @@ from wycena.settings import settings
 
 class AddressMixin:
     street: str
-    building_number: str
-    apartment_nr: str = None
+    building_nr: str
+    apartment_nr: int = None
     city: str
 
 
@@ -22,10 +22,5 @@ class QueryFilter(BaseModel):
 class QueryOptions(BaseModel):
     filters: typing.List[QueryFilter] = None
     sortBy: str = None
-    page: int = None
+    last_key: str = None
     pageSize: int = settings.API_PAGE_SIZE
-
-
-class BaseDBModel(BaseModel):
-    def filter(self, options: QueryOptions):
-        raise NotImplemented

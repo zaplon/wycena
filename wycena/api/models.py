@@ -39,7 +39,7 @@ class Evaluation:
 @strawberry.experimental.pydantic.type(model=models.Transaction)
 class Transaction:
     street: strawberry.auto
-    building_number: strawberry.auto
+    building_nr: strawberry.auto
     apartment_nr: strawberry.auto
     city: strawberry.auto
     type: PropertyType

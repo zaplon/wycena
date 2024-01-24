@@ -3,7 +3,6 @@ import typing
 
 from pydantic import BaseModel
 
-from wycena.models.base import BaseDBModel
 from wycena.models.enums import PropertyType
 
 
@@ -13,7 +12,7 @@ class Photo(BaseModel):
     datetime: datetime.datetime
 
 
-class Evaluation(BaseDBModel):
+class Evaluation(BaseModel):
     address: str
     type: PropertyType
     buyer: str

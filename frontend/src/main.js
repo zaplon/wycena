@@ -25,6 +25,7 @@ const apolloClient = new ApolloClient({
 const routes = [
   { path: '/', component: EvaluationsList },
   { path: '/wyceny/', component: EvaluationsList },
+  { path: '/wyceny/dodaj/', component: EvaluationEdit },
   { path: '/wyceny/:id', component: EvaluationEdit },
   { path: '/baza-transakcji/', component: TransactionsList },
 ]

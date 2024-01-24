@@ -7,7 +7,8 @@
 
 body {
   font-family: 'Open Sans', sans-serif;
-  background-color: #eaf1f1;
+  background-color: $gray-100;
+  background-image: $gradient;
 }
 
 .container .card {
@@ -22,4 +23,9 @@ body {
   background-color: inherit;
   border-bottom: none;
   font-weight: bold;
+}
+
+.btn-primary {
+  background-color: $primary;
+  background-image: $gradient;
 }

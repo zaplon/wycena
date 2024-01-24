@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar fixed-bottom navbar-light bg-light">
+  <nav class="navbar fixed-bottom navbar-light bg-white">
     <a class="navbar-brand" href="#">
       <img src="@/assets/logo.png">
     </a>
@@ -16,5 +16,8 @@
  }
  .nav-links {
    width: calc(100% - 40px);
+ }
+ nav {
+ box-shadow: rgba(0, 0, 0, 0.1) 0px -20px 25px -5px, rgba(0, 0, 0, 0.04) 0px -10px 10px -5px;
  }
 </style>

@@ -3,42 +3,56 @@ import {useMutation, useQuery} from "@vue/apollo-composable"
 import gql from 'graphql-tag'
 import {ref, watch} from "vue"
 import PlacesAutocomplete from "@/components/PlacesAutocomplete";
+import {useRoute} from "vue-router";
 
 const evaluation = ref({
   id: null,
   paid: false,
   address: ""
 })
+const route = useRoute()
 
 const {result, loading, error} = useQuery(gql`
-      query getEvaluation {
-        evaluationById {
+      query getEvaluation($id: String) {
+        evaluationById(id: $id) {
           id
           address
           price
           paid
         }
       }
-    `)
+    `, {
+      id: route.params.id
+    }, () => ({
+      enabled: route.params.id,
+    })
+)
 watch(result, (value) => evaluation.value = value)
 
-const { mutate: saveEvaluationMutation } = useMutation(gql`
+const {mutate: saveEvaluationMutation} = useMutation(gql`
       mutation saveEvaluation ($input: SaveEvaluationInput!) {
         saveEvaluation (input: $input) {
           id
         }
       }
     `)
-function saveEvaluation () {
+
+function saveEvaluation() {
   saveEvaluationMutation()
 }
 
-function setAddress (address) {
+function setAddress(address) {
   evaluation.value.address = address
 }
 
 </script>
 <template>
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="#">Start</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Nowa wycena</li>
+    </ol>
+  </nav>
   <div class="card" :class="{'loading-data': loading, 'loading-failed': error}">
     <div class="card-header">
       {{ evaluation.id ? evaluation.address : "Nowa wycena" }}

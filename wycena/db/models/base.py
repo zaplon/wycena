@@ -1,6 +1,6 @@
 from pynamodb.models import Model
 
-from wycena.models import QueryOptions
+from wycena.models.base import QueryOptions
 from wycena.models.enums import QueryFilterType
 from wycena.settings import settings
 
@@ -13,14 +13,20 @@ class BaseMeta:
 
 
 class BaseModel(Model):
-    def filter(self, options: QueryOptions):
+    @classmethod
+    def filter(cls, options: QueryOptions):
         conditions = None
         for f in options.filters:
             if f.filter_type == QueryFilterType.EQUAL:
-                conditions &= getattr(self, f.field_name) == f.value
+                conditions &= getattr(cls, f.field_name) == f.value
             elif f.filter_type == QueryFilterType.GREATER_THAN:
-                conditions &= getattr(self, f.field_name) > f.value
+                conditions &= getattr(cls, f.field_name) > f.value
             elif f.filter_type == QueryFilterType.LOWER_THAN:
-                conditions &= getattr(self, f.field_name) < f.value
-        return self.query(conditions=conditions, limit=options.pageSize,
-                          offset=options.page * options.pageSize)
+                conditions &= getattr(cls, f.field_name) < f.value
+        return cls.query(
+            hash_key=cls._hash_keyname,
+            filter_condition=conditions,
+            limit=options.pageSize,
+            last_evaluated_key=options.last_key
+        )
+

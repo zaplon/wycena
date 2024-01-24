@@ -54,6 +54,9 @@ const columns = [
   <div class="card">
     <div class="card-header">Lista wycen</div>
     <div class="card-body">
+      <router-link class="btn btn-primary mb-2" to="/wyceny/dodaj/">
+        <i class="bi bi bi-plus"></i>Dodaj
+      </router-link>
       <data-table :columns="columns" :rows="evaluations || []" :add-actions-slot="true"
                   @sort="s => queryOptions.sortBy = s"
                   @paginate="p => queryOptions.page = p"
