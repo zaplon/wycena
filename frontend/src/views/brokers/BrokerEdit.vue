@@ -7,8 +7,7 @@ import {useRoute} from "vue-router";
 
 const broker = ref({
   id: null,
-  paid: false,
-  address: ""
+  name: ""
 })
 const route = useRoute()
 
@@ -16,9 +15,7 @@ const {result, loading, error} = useQuery(gql`
       query getBroker($id: String) {
         brokerById(id: $id) {
           id
-          address
-          price
-          paid
+          name
         }
       }
     `, {
@@ -41,16 +38,14 @@ function saveBroker() {
   saveBrokerMutation()
 }
 
-function setAddress(address) {
-  broker.value.address = address
-}
-
 </script>
 <template>
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="#">Start</a></li>
-      <li class="breadcrumb-item active" aria-current="page">Nowa wycena</li>
+      <li class="breadcrumb-item"><a href="/posrednicy/">Start</a></li>
+      <li v-if="!broker.id" class="breadcrumb-item active" aria-current="page">Nowy pośrednik</li>
+      <li v-else class="breadcrumb-item active" aria-current="page">{{broker.name }}</li>
     </ol>
   </nav>
   <div class="card" :class="{'loading-data': loading, 'loading-failed': error}">
@@ -59,49 +54,10 @@ function setAddress(address) {
     </div>
     <form @submit="saveBroker">
       <div class="card-body">
-        <ul class="nav nav-pills">
-          <li class="nav-item">
-            <a class="nav-link active" href="#basic-info">Dane podstawowe</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#calculations">Obliczenia</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#photos">Zdjęcia</a>
-          </li>
-        </ul>
-
-        <div id="basic-info">
-          <div class="row mb-3 mt-3">
-            <div class="col col-md-3">
-              <label class="form-label">Adres</label>
-            </div>
-            <div class="col col-md-9">
-              <places-autocomplete @selected="setAddress"/>
-            </div>
-          </div>
-          <div class="row mb-3 mt-3">
-            <div class="col col-md-3">
-              <label class="form-label">Kontaktowy nr telefonu</label>
-            </div>
-            <div class="col col-md-9">
-              <input type="text" class="form-control" v-model="broker.phoneNumber">
-            </div>
-          </div>
-          <div class="row mb-3 mt-3">
-            <div class="col col-md-3">
-              <label class="form-label">Opłacone</label>
-            </div>
-            <div class="col col-md-9">
-              <input type="checkbox" class="form-check-input" v-model="broker.paid">
-            </div>
-          </div>
-        </div>
       </div>
-
       <div class="card-footer">
+        <a href="/posrednicy/" class="btn btn-default">Cofnij</a>
         <button type="submit" class="btn btn-primary">Zapisz</button>
-        <button type="submit" class="btn btn-secondary ms-2">Wygeneruj operat</button>
       </div>
     </form>
   </div>

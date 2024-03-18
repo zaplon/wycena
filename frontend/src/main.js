@@ -2,6 +2,8 @@ import {createApp, h, provide} from 'vue'
 import App from './App.vue'
 import "./assets/scss/theme.scss"
 import 'bootstrap-icons/font/bootstrap-icons.css'
+import BrokersList from './views/evaluations/BrokersList'
+import BrokerEdit from './views/evaluations/BrokerEdit'
 import EvaluationsList from './views/evaluations/EvaluationsList'
 import EvaluationEdit from './views/evaluations/EvaluationEdit'
 import TransactionsList from './views/transactions/TransactionsList'
@@ -24,9 +26,15 @@ const apolloClient = new ApolloClient({
 
 const routes = [
   { path: '/', component: EvaluationsList },
+
   { path: '/wyceny/', component: EvaluationsList },
   { path: '/wyceny/dodaj/', component: EvaluationEdit },
   { path: '/wyceny/:id', component: EvaluationEdit },
+
+  { path: '/posrednicy/', component: BrokersList },
+  { path: '/posrednicy/dodaj/', component: BrokerEdit },
+  { path: '/posrednicy/:id', component: BrokerEdit },
+
   { path: '/baza-transakcji/', component: TransactionsList },
 ]
 
