@@ -3,18 +3,25 @@ import datetime
 import logging
 import uuid
 
+import googlemaps
 import openpyxl
+from pydantic import ValidationError
 from pydantic.v1 import DateError
 from pydantic.v1.datetime_parse import parse_date
-from pynamodb.exceptions import AttributeNullError
+from sqlmodel import Session
 
+from wycena import abstract_models
 from wycena.db import models as db_models
+from wycena.db.models import get_engine
+from wycena.settings import settings
 
 
 def perform_import(file_path: str, **defaults):
     rows = get_rows(file_path)
-    for row in rows:
-        upsert_transaction(row, **defaults)
+    with Session(get_engine()) as session:
+        for row in rows:
+            upsert_transaction(session, row, **defaults)
+        session.commit()
 
 
 def get_rows(file_path) -> [dict]:
@@ -38,9 +45,9 @@ def get_rows(file_path) -> [dict]:
         raise ValueError(f"Not supported extension: {extension}")
 
 
-def upsert_transaction(row: dict, **defaults):
+def upsert_transaction(session, row: dict, **defaults):
     row = {k.lower(): v for k, v in row.items()}
-    transaction = db_models.Transaction()
+    data = {}
     for field, col_handler in FIELD_HANDLERS.items():
         for col_name in col_handler[0]:
             if col_name in row:
@@ -49,18 +56,19 @@ def upsert_transaction(row: dict, **defaults):
                 except ValueError as e:
                     logging.error(e)
                     return
-                setattr(transaction, field, val)
+                data[field] = val
                 break
-    transaction.long, transaction.lat = get_coords(transaction)
+    data['long'], data['lat'] = get_coords(data)
     for k, v in defaults.items():
-        if not getattr(transaction, k, None):
-            setattr(transaction, k, v)
-    transaction.id = str(uuid.uuid4())
-    print(transaction.__dict__)
+        if not data.get(k):
+            data[k] = v
+    data['id'] = uuid.uuid4()
     try:
-        transaction.save()
-    except AttributeNullError as e:
+        t = abstract_models.Transaction(**data)
+    except ValidationError as e:
         logging.warning(e)
+        return
+    session.add(db_models.Transaction(**t.model_dump()))
 
 
 def handle_float(val):
@@ -89,8 +97,14 @@ def handle_date(val):
     return datetime.datetime.combine(date, datetime.time.min)
 
 
-def get_coords(transaction: db_models.Transaction):
-    return 20, 50
+def get_coords(data) -> (float, float):
+    address = f"{data['street']} {data['building_nr']} {data['city']}"
+    geocode_result = get_maps_client().geocode(address)
+    return geocode_result
+
+
+def get_maps_client() -> googlemaps.Client:
+    return googlemaps.Client(key=settings.MAPS_API_KEY)
 
 
 FIELD_HANDLERS = {

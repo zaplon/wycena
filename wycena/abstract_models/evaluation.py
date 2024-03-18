@@ -1,9 +1,9 @@
 import datetime
-import typing
+import uuid
 
 from pydantic import BaseModel
 
-from wycena.models.enums import PropertyType
+from .enums import PropertyType
 
 
 class Photo(BaseModel):
@@ -13,15 +13,15 @@ class Photo(BaseModel):
 
 
 class Evaluation(BaseModel):
+    id: uuid.UUID
     address: str
     type: PropertyType
-    buyer: str
+    costumer: str
     phone_number: str
     price: float
-    provider: str
+    broker: str
     estimated_value: float = None
     vision_datetime: datetime.datetime = None
-    photos: typing.List[Photo]
     finished: bool = False
     paid: bool = False
     assigned_to: str = None

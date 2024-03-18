@@ -18,3 +18,7 @@ class Mutation:
         perform_import(f)
         os.unlink(f.name)
         return True
+
+    @strawberry.mutation
+    def add_broker(self):
+        pass

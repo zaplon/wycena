@@ -4,7 +4,7 @@ import gql from "graphql-tag";
 import {ref, watch} from "vue";
 import DataTable from "@/components/DataTable";
 
-const evaluations = ref("")
+const brokers = ref("")
 const queryOptions = ref({
   sortBy: null,
   filters: [],
@@ -14,8 +14,8 @@ function applyQueryFilter(column, value) {
   console.log(column, value)
 }
 const { result } = useQuery(gql`
-      query getEvaluations($options: QueryOptions!) {
-        evaluations(options: $options) {
+      query getBrokers($options: QueryOptions!) {
+        brokers(options: $options) {
           items {
             address
             type
@@ -27,7 +27,7 @@ const { result } = useQuery(gql`
   options: queryOptions
 })
 watch(result, () => {
-  evaluations.value = result.value.evaluations
+  brokers.value = result.value.brokers
 })
 
 const columns = [
@@ -59,7 +59,7 @@ const columns = [
       <router-link class="btn btn-primary mb-2" to="/wyceny/dodaj/">
         <i class="bi bi bi-plus"></i>Dodaj
       </router-link>
-      <data-table :columns="columns" :rows="evaluations || []" :add-actions-slot="true"
+      <data-table :columns="columns" :rows="brokers || []" :add-actions-slot="true"
                   @sort="s => queryOptions.sortBy = s"
                   @paginate="p => queryOptions.page = p"
                   @filter="(c, v) => applyQueryFilter(c,v)">

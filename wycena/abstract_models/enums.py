@@ -1,7 +1,7 @@
 import enum
 
 
-class PropertyType(enum.Enum):
+class PropertyType(str, enum.Enum):
     APARTMENT = "APARTMENT"
     HOUSE = "HOUSE"
     COMMERCIAL = "COMMERCIAL"

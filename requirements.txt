@@ -1,5 +1,13 @@
+googlemaps==4.10.0
 openpyxl==3.1.2
 strawberry-graphql[fastapi]
 pydantic-settings
-pynamodb==5.5.1
 python-multipart
+sqlmodel==0.0.14
+pynamodb~=5.5.1
+SQLAlchemy~=2.0.25
+fastapi~=0.108.0
+starlette~=0.32.0.post1
+boto3~=1.34.11
+pydantic~=2.5.3
+pytest~=7.4.4

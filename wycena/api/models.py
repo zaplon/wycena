@@ -3,10 +3,10 @@ import typing
 
 import strawberry
 
-from wycena import models
+from wycena import abstract_models
 
 
-@strawberry.experimental.pydantic.type(model=models.Photo, all_fields=True)
+@strawberry.experimental.pydantic.type(model=abstract_models.Photo, all_fields=True)
 class Photo:
     pass
 
@@ -18,15 +18,15 @@ class PropertyType(enum.Enum):
     COMMERCIAL = "COMMERCIAL"
 
 
-@strawberry.experimental.pydantic.type(model=models.Evaluation)
+@strawberry.experimental.pydantic.type(model=abstract_models.Evaluation)
 class Evaluation:
-    address: int
-    buyer: strawberry.auto
+    id: strawberry.auto
+    address: strawberry.auto
+    costumer: strawberry.auto
     type: PropertyType
     phone_number: strawberry.auto
     price: strawberry.auto
-    provider: strawberry.auto
-    register_number: strawberry.auto
+    broker: strawberry.auto
     estimated_value: strawberry.auto
     vision_datetime: strawberry.auto
     photos: typing.List[Photo]
@@ -36,8 +36,9 @@ class Evaluation:
     pdf: strawberry.auto
 
 
-@strawberry.experimental.pydantic.type(model=models.Transaction)
+@strawberry.experimental.pydantic.type(model=abstract_models.Transaction)
 class Transaction:
+    id: strawberry.auto
     street: strawberry.auto
     building_nr: strawberry.auto
     apartment_nr: strawberry.auto
@@ -55,6 +56,16 @@ class Transaction:
     number_of_rooms: strawberry.auto
 
 
+@strawberry.experimental.pydantic.type(model=abstract_models.Buyer)
+class Buyer:
+    id: strawberry.auto
+
+
+@strawberry.experimental.pydantic.type(model=abstract_models.Broker)
+class Broker:
+    id: strawberry.auto
+
+
 @strawberry.enum
 class QueryFilterType(enum.Enum):
     EQUAL = 'EQUAL'
@@ -63,13 +74,16 @@ class QueryFilterType(enum.Enum):
     IN = 'IN'
 
 
-@strawberry.experimental.pydantic.input(model=models.QueryFilter)
+@strawberry.experimental.pydantic.input(model=abstract_models.QueryFilter)
 class QueryFilter:
     value: strawberry.auto
     field_name: strawberry.auto
     filter_type: QueryFilterType
 
 
-@strawberry.experimental.pydantic.input(model=models.QueryOptions, all_fields=True)
+@strawberry.experimental.pydantic.input(model=abstract_models.QueryOptions)
 class QueryOptions:
     filters: typing.List[QueryFilter] = None
+    offset: strawberry.auto
+    sort_by: strawberry.auto
+    page_size: strawberry.auto

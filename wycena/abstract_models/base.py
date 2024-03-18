@@ -2,14 +2,14 @@ import typing
 
 from pydantic import BaseModel
 
-from wycena.models.enums import QueryFilterType
+from .enums import QueryFilterType
 from wycena.settings import settings
 
 
 class AddressMixin:
     street: str
     building_nr: str
-    apartment_nr: int = None
+    apartment_nr: typing.Optional[int] = None
     city: str
 
 
@@ -21,6 +21,6 @@ class QueryFilter(BaseModel):
 
 class QueryOptions(BaseModel):
     filters: typing.List[QueryFilter] = None
-    sortBy: str = None
-    last_key: str = None
-    pageSize: int = settings.API_PAGE_SIZE
+    sort_by: typing.Optional[str] = None
+    offset: typing.Optional[int] = None
+    page_size: typing.Optional[int] = settings.API_PAGE_SIZE

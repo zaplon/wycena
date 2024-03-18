@@ -5,7 +5,7 @@ import {ref, watch} from "vue"
 import PlacesAutocomplete from "@/components/PlacesAutocomplete";
 import {useRoute} from "vue-router";
 
-const evaluation = ref({
+const broker = ref({
   id: null,
   paid: false,
   address: ""
@@ -13,8 +13,8 @@ const evaluation = ref({
 const route = useRoute()
 
 const {result, loading, error} = useQuery(gql`
-      query getEvaluation($id: String) {
-        evaluationById(id: $id) {
+      query getBroker($id: String) {
+        brokerById(id: $id) {
           id
           address
           price
@@ -27,22 +27,22 @@ const {result, loading, error} = useQuery(gql`
       enabled: route.params.id,
     })
 )
-watch(result, (value) => evaluation.value = value)
+watch(result, (value) => broker.value = value)
 
-const {mutate: saveEvaluationMutation} = useMutation(gql`
-      mutation saveEvaluation ($input: SaveEvaluationInput!) {
-        saveEvaluation (input: $input) {
+const {mutate: saveBrokerMutation} = useMutation(gql`
+      mutation saveBroker ($input: SaveBrokerInput!) {
+        saveBroker (input: $input) {
           id
         }
       }
     `)
 
-function saveEvaluation() {
-  saveEvaluationMutation()
+function saveBroker() {
+  saveBrokerMutation()
 }
 
 function setAddress(address) {
-  evaluation.value.address = address
+  broker.value.address = address
 }
 
 </script>
@@ -55,9 +55,9 @@ function setAddress(address) {
   </nav>
   <div class="card" :class="{'loading-data': loading, 'loading-failed': error}">
     <div class="card-header">
-      {{ evaluation.id ? evaluation.address : "Nowa wycena" }}
+      {{ broker.id ? broker.address : "Nowa wycena" }}
     </div>
-    <form @submit="saveEvaluation">
+    <form @submit="saveBroker">
       <div class="card-body">
         <ul class="nav nav-pills">
           <li class="nav-item">
@@ -85,7 +85,7 @@ function setAddress(address) {
               <label class="form-label">Kontaktowy nr telefonu</label>
             </div>
             <div class="col col-md-9">
-              <input type="text" class="form-control" v-model="evaluation.phoneNumber">
+              <input type="text" class="form-control" v-model="broker.phoneNumber">
             </div>
           </div>
           <div class="row mb-3 mt-3">
@@ -93,7 +93,7 @@ function setAddress(address) {
               <label class="form-label">Opłacone</label>
             </div>
             <div class="col col-md-9">
-              <input type="checkbox" class="form-check-input" v-model="evaluation.paid">
+              <input type="checkbox" class="form-check-input" v-model="broker.paid">
             </div>
           </div>
         </div>

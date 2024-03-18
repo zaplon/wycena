@@ -1,17 +1,19 @@
 import uuid
 
 import factory
+from factory.alchemy import SQLAlchemyModelFactory
 from factory.fuzzy import FuzzyChoice
 
-from wycena import models
-from wycena.models import PropertyType
+from wycena.db import models
+from wycena.abstract_models.enums import PropertyType
 
 
-class TransactionFactory(factory.Factory):
+class TransactionFactory(SQLAlchemyModelFactory):
     class Meta:
         model = models.Transaction
+        sqlalchemy_session_persistence = "commit"
 
-    id = factory.lazy_attribute(lambda x: uuid.uuid4())
+    id = factory.lazy_attribute(lambda x: str(uuid.uuid4()))
     type = FuzzyChoice(PropertyType)
     primary_market = factory.Faker('pybool')
     price = factory.Faker('pyint', min_value=500, max_value=1500)

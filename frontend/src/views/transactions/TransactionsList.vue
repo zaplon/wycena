@@ -7,56 +7,64 @@ import {openModal} from "@kolirt/vue-modal";
 import ImportTransactionsModal from "@/components/modals/ImportTransactionsModal"
 import axios from "axios";
 import {useNotification} from "@kyvg/vue3-notification";
+import TransactionsMap from "@/components/TransactionsMap";
 
 const transactions = ref("")
 const queryOptions = ref({
   sortBy: null,
-  filters: null,
-  page: 0
+  filters: [],
+  offset: 0
 })
 const {result} = useQuery(gql`
-      query getTransactions($options: queryOptions) {
-        transactions {
-          city
-          street
-          buildingNumber
-          transactionDatetime
-          type
-          price
-          provider
+      query getTransactions($options: QueryOptions!) {
+        transactions(options: $options){
+          items {
+            city
+            street
+            buildingNr
+            transactionDate
+            type
+            price
+            district
+            primaryMarket
+            area
+          }
         }
       }`, {
   options: queryOptions
 })
 watch(result, () => {
-  transactions.value = result.value.transactions
+  transactions.value = result.value.transactions.items
 })
 
-const { notify }  = useNotification()
+const {notify} = useNotification()
 
 function importTransactions() {
-  openModal(ImportTransactionsModal).then((data) => {
+  openModal(ImportTransactionsModal, {}).then((data) => {
     const formData = new FormData();
-    for (let file of data.file) {
-      formData.append('files', file)
+    for (let i = 0; i < data.files.length; i++) {
+      formData.append('files', data.files[i])
     }
-    const headers = { 'Content-Type': 'multipart/form-data' };
-    axios.post(`${process.env.VUE_APP_BACKEND_URL}/upload/transactions/`, formData, { headers }).then(() => {
+    const headers = {'Content-Type': 'multipart/form-data'};
+    axios.post(`${process.env.VUE_APP_BACKEND_URL}/upload/transactions/`, formData, {headers}).then(() => {
       notify("Transakcje zostały zaimportowane")
     }).catch((error) => {
-      notify({text:`Wystąpił błąd podczas importu transakcji: ${error}`, type: 'warn'})
+      notify({text: `Wystąpił błąd podczas importu transakcji: ${error}`, type: 'warn'})
     })
-  }).catch(()=> {})
+  }).catch(() => {
+  })
 }
+
 function onDataFiltering(filters) {
- queryOptions.value.filters = filters
+  queryOptions.value.filters = filters
 }
 
 
 const columns = [
   {name: "Miejscowość", sortable: true, model: "city", filterable: true, type: "text"},
+  {name: "Dzielnica", sortable: false, model: "district", filterable: true, type: "text"},
   {name: "Ulica", sortable: true, model: "street", filterable: true, type: "text"},
-  {name: "Numer", sortable: false, model: "buildingNumber", type: "number"},
+  {name: "Numer", sortable: false, model: "buildingNr", type: "number"},
   {
     name: "Typ nieruchomości", sortable: false, model: "type", filterable: true,
     filterOptions: [
@@ -66,7 +74,9 @@ const columns = [
     ]
   },
   {name: "Źródło", sortable: true, model: "provider"},
-  {name: "Data transakcji", sortable: true, model: "transactionDatetime"},
+  {name: "Data transakcji", sortable: true, model: "transactionDate"},
+  {name: "Rynek pierwotny", sortable: false, model: "primaryMarket"},
+  {name: "Powierzchnia", sortable: true, model: "area"},
   {name: "Cena", sortable: true, model: "price", filterable: true, rangeFilter: true},
 ]
 </script>
@@ -89,13 +99,14 @@ const columns = [
         Dodaj ręcznie
       </router-link>
       <data-table :columns="columns" :rows="transactions || []" :add-actions-slot="true"
-      @filter="onDataFiltering">
+                  @filter="onDataFiltering">
         <template v-slot:actions>
           <button class="btn btn-sm btn-danger">
             <i class="bi bi-trash"></i>
           </button>
         </template>
       </data-table>
+      <transactions-map></transactions-map>
     </div>
   </div>
 </template>
