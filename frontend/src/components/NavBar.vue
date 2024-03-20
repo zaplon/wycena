@@ -6,8 +6,7 @@
     <div class="d-flex justify-content-around nav-links">
       <router-link to="/wyceny" class="nav-link">Wyceny</router-link>
       <router-link to="/baza-transakcji" class="nav-link">Baza transakcji</router-link>
-      <router-link to="/posrednicy" class="nav-link">Pośrednicy</router-link>
-      <router-link to="/klienci" class="nav-link">Klienci</router-link>
+      <router-link to="/ustawienia" class="nav-link">Ustawienia</router-link>
     </div>
   </nav>
 </template>

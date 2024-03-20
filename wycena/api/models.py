@@ -18,25 +18,15 @@ class PropertyType(enum.Enum):
     COMMERCIAL = "COMMERCIAL"
 
 
-@strawberry.experimental.pydantic.type(model=abstract_models.Client)
-class Client:
-    id: strawberry.auto
-
-
-@strawberry.experimental.pydantic.type(model=abstract_models.Broker)
-class Broker:
-    id: strawberry.auto
-
-
 @strawberry.experimental.pydantic.type(model=abstract_models.Evaluation)
 class Evaluation:
     id: strawberry.auto
     address: strawberry.auto
-    client: Client
+    costumer: strawberry.auto
     type: PropertyType
     phone_number: strawberry.auto
     price: strawberry.auto
-    broker: Broker
+    broker: strawberry.auto
     estimated_value: strawberry.auto
     vision_datetime: strawberry.auto
     photos: typing.List[Photo]
@@ -66,6 +56,16 @@ class Transaction:
     number_of_rooms: strawberry.auto
 
 
+@strawberry.experimental.pydantic.type(model=abstract_models.Buyer)
+class Buyer:
+    id: strawberry.auto
+
+
+@strawberry.experimental.pydantic.type(model=abstract_models.Broker)
+class Broker:
+    id: strawberry.auto
+
+
 @strawberry.enum
 class QueryFilterType(enum.Enum):
     EQUAL = 'EQUAL'
@@ -87,10 +87,3 @@ class QueryOptions:
     offset: strawberry.auto
     sort_by: strawberry.auto
     page_size: strawberry.auto
-
-
-@strawberry.enum
-class InstanceType(enum.Enum):
-    CLIENT = 'CLIENT'
-    BROKER = 'BROKER'
-    EVALUATION = 'EVALUATION'
