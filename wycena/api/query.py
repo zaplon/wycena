@@ -24,7 +24,7 @@ class PaginationWindow(typing.Generic[Item]):
 class Query:
     @strawberry.field
     def evaluations(self, options: models.QueryOptions = None) -> PaginationWindow[models.Evaluation]:
-        items, total_count = db_models.Transaction.filter(options)
+        items, total_count = db_models.Evaluation.filter(options)
         return PaginationWindow(items=items, total_pages=int(total_count/settings.API_PAGE_SIZE))
 
     @strawberry.field
@@ -43,11 +43,15 @@ class Query:
         pass
 
     @strawberry.field
-    def buyers(self, options: models.QueryOptions = None) -> PaginationWindow[models.Buyer]:
-        items, total_count = db_models.Buyer.filter(options)
+    def clients(self, options: models.QueryOptions = None) -> PaginationWindow[models.Client]:
+        items, total_count = db_models.Client.filter(options)
         return PaginationWindow(items=items, total_pages=int(total_count/settings.API_PAGE_SIZE))
 
     @strawberry.field
     def brokers(self, options: models.QueryOptions = None) -> PaginationWindow[models.Broker]:
         items, total_count = db_models.Broker.filter(options)
         return PaginationWindow(items=items, total_pages=int(total_count/settings.API_PAGE_SIZE))
+
+    @strawberry.field
+    def broker_by_id(self, pk: uuid.UUID) -> models.Evaluation:
+        return db_models.Broker.get(pk)

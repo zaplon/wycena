@@ -67,8 +67,9 @@ function filterData(e, column, op) {
     </thead>
     <tbody>
       <tr v-for="row in rows" :key="row.id">
-        <td v-for="col in columns" :key="col.name">
-          {{ row[col.model] }}
+        <td v-for="(col, index) in columns" :key="col.name">
+          <template v-if="index === 0"><a :href="row.id">{{ row[col.model] }}</a></template>
+          <template v-else>{{ row[col.model] }}</template>
         </td>
         <td v-if="addActionsSlot">
           <slot name="actions"></slot>

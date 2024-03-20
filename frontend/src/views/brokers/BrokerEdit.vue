@@ -2,20 +2,21 @@
 import {useMutation, useQuery} from "@vue/apollo-composable"
 import gql from 'graphql-tag'
 import {ref, watch} from "vue"
-import PlacesAutocomplete from "@/components/PlacesAutocomplete";
-import {useRoute} from "vue-router";
-
+import {useRoute, useRouter} from "vue-router";
 const broker = ref({
   id: null,
-  name: ""
+  name: "",
+  notes: ""
 })
 const route = useRoute()
+const router = useRouter()
 
 const {result, loading, error} = useQuery(gql`
       query getBroker($id: String) {
         brokerById(id: $id) {
           id
           name
+          notes
         }
       }
     `, {
@@ -27,15 +28,37 @@ const {result, loading, error} = useQuery(gql`
 watch(result, (value) => broker.value = value)
 
 const {mutate: saveBrokerMutation} = useMutation(gql`
-      mutation saveBroker ($input: SaveBrokerInput!) {
-        saveBroker (input: $input) {
+      mutation saveBroker ($input: JSON!) {
+        createInstance (data: $input) {
           id
         }
       }
     `)
 
+const {mutate: updateBrokerMutation} = useMutation(gql`
+      mutation updateBroker ($id: UUID!, $input: JSON!) {
+        updateInstance (id: $id, data: $input) {
+          id
+        }
+      }
+    `)
+
+const {mutate: deleteBrokerMutation} = useMutation(gql`
+      mutation deleteBroker ($id: UUID!) {
+        deleteInstance (id: $id)
+      }
+    `)
+
 function saveBroker() {
-  saveBrokerMutation()
+  let mut
+  if (broker.value.id)
+    mut = updateBrokerMutation(broker.value.id, broker.value)
+  else
+    mut = saveBrokerMutation(broker.value)
+  mut.then(() => router.push("/posrednicy/"))
+}
+function removeBroker() {
+  deleteBrokerMutation(broker.value.id).then(router.push("/posrednicy/"))
 }
 
 </script>
@@ -50,14 +73,39 @@ function saveBroker() {
   </nav>
   <div class="card" :class="{'loading-data': loading, 'loading-failed': error}">
     <div class="card-header">
-      {{ broker.id ? broker.address : "Nowa wycena" }}
+      {{ broker.id ? broker.name : "Nowy pośrednik" }}
     </div>
     <form @submit="saveBroker">
       <div class="card-body">
+        <div class="row mb-3 mt-3">
+          <div class="col col-md-3">
+            <label class="form-label">Nazwa</label>
+          </div>
+          <div class="col col-md-9">
+            <input required type="text" class="form-control" v-model="broker.name">
+          </div>
+        </div>
+        <div class="row mb-3 mt-3">
+          <div class="col col-md-3">
+            <label class="form-label">Kontaktowy nr telefonu</label>
+          </div>
+          <div class="col col-md-9">
+            <input type="text" class="form-control" v-model="broker.phoneNumber">
+          </div>
+        </div>
+        <div class="row mb-3 mt-3">
+          <div class="col col-md-3">
+            <label class="form-label">Notatki</label>
+          </div>
+          <div class="col col-md-9">
+            <textarea class="form-control" v-model="broker.notes"></textarea>
+          </div>
+        </div>
       </div>
       <div class="card-footer">
-        <a href="/posrednicy/" class="btn btn-default">Cofnij</a>
         <button type="submit" class="btn btn-primary">Zapisz</button>
+        <a href="/posrednicy/" class="btn btn-default">Cofnij</a>
+        <button v-if="broker.id" type="button" @click="removeBroker" class="btn btn-danger float-end">Usuń</button>
       </div>
     </form>
   </div>
