@@ -2,8 +2,8 @@ import {createApp, h, provide} from 'vue'
 import App from './App.vue'
 import "./assets/scss/theme.scss"
 import 'bootstrap-icons/font/bootstrap-icons.css'
-import BrokersList from './views/evaluations/BrokersList'
-import BrokerEdit from './views/evaluations/BrokerEdit'
+import BrokersList from './views/brokers/BrokersList'
+import BrokerEdit from './views/brokers/BrokerEdit'
 import EvaluationsList from './views/evaluations/EvaluationsList'
 import EvaluationEdit from './views/evaluations/EvaluationEdit'
 import TransactionsList from './views/transactions/TransactionsList'
@@ -31,9 +31,9 @@ const routes = [
   { path: '/wyceny/dodaj/', component: EvaluationEdit },
   { path: '/wyceny/:id', component: EvaluationEdit },
 
+  { path: '/posrednicy/:id', component: BrokerEdit },
   { path: '/posrednicy/', component: BrokersList },
   { path: '/posrednicy/dodaj/', component: BrokerEdit },
-  { path: '/posrednicy/:id', component: BrokerEdit },
 
   { path: '/baza-transakcji/', component: TransactionsList },
 ]

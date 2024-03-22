@@ -7,7 +7,6 @@ import {openModal} from "@kolirt/vue-modal";
 import ImportTransactionsModal from "@/components/modals/ImportTransactionsModal"
 import axios from "axios";
 import {useNotification} from "@kyvg/vue3-notification";
-import TransactionsMap from "@/components/TransactionsMap";
 
 const transactions = ref("")
 const queryOptions = ref({
@@ -106,7 +105,7 @@ const columns = [
           </button>
         </template>
       </data-table>
-      <transactions-map></transactions-map>
+<!--      <transactions-map></transactions-map>-->
     </div>
   </div>
 </template>
