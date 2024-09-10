@@ -48,6 +48,6 @@ class Mutation:
         return {snake_to_camel(k): v for (k, v) in instance.model_dump(mode='json').items()}
 
     @strawberry.mutation
-    def remove_instance(self, instance_type: InstanceType, data: JSON) -> None:
+    def remove_instance(self, instance_type: InstanceType, pk: uuid.UUID) -> None:
         klass = getattr(db_models, instance_type.value.capitalize())
-        klass.delete(data)
+        klass.delete(pk)
