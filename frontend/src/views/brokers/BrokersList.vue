@@ -1,10 +1,11 @@
 <script setup>
-import {useQuery} from "@vue/apollo-composable";
+import {useMutation, useQuery} from "@vue/apollo-composable";
 import gql from "graphql-tag";
 import {ref, watch} from "vue";
 import DataTable from "@/components/DataTable";
 
 const brokers = ref("")
+const selectedBrokerId = ref("")
 const queryOptions = ref({
   sortBy: null,
   filters: [],
@@ -30,6 +31,18 @@ watch(result, () => {
   brokers.value = result.value.brokers.items
 })
 
+function removeBroker(id) {
+  selectedBrokerId.value = id
+  removeBrokerMutation()
+}
+const {mutate: removeBrokerMutation} = useMutation(gql`
+      mutation removeBroker ($pk: UUID!) {
+        removeInstance (instanceType: BROKER, pk: $pk)
+      }
+    `, {variables: {id: selectedBrokerId.value}}
+)
+
+
 const columns = [
     { name: "Nazwa", sortable: true, model: "name", filterable: true, type: "text"},
     { name: "Telefon", sortable: false, model: "phoneNumber", type: "text"},
@@ -46,15 +59,15 @@ const columns = [
   <div class="card">
     <div class="card-header">Lista pośredników</div>
     <div class="card-body">
-      <RouterLink class="btn btn-primary mb-2" to="posrednicy/dodaj">
+      <RouterLink class="btn btn-primary mb-2" to="/posrednicy/dodaj">
         <i class="bi bi bi-plus"></i>Dodaj
       </RouterLink>
       <data-table :columns="columns" :rows="brokers || []" :add-actions-slot="true"
                   @sort="s => queryOptions.sortBy = s"
                   @paginate="p => queryOptions.page = p"
                   @filter="(c, v) => applyQueryFilter(c,v)">
-        <template v-slot:actions>
-          <button class="btn btn-sm btn-danger">
+        <template v-slot:actions="slotProps">
+          <button class="btn btn-sm btn-danger" @click="removeBroker(slotProps.row.id)">
             <i class="bi bi-trash"></i>
           </button>
         </template>

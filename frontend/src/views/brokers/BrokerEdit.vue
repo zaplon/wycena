@@ -50,9 +50,9 @@ const {mutate: updateBrokerMutation} = useMutation(gql`
       }
     `, {variables: {pk: broker.value.id, input: broker.value}})
 
-const {mutate: deleteBrokerMutation} = useMutation(gql`
-      mutation deleteBroker ($pk: UUID!) {
-        deleteInstance (instanceType: BROKER, pk: $pk)
+const {mutate: removeBrokerMutation} = useMutation(gql`
+      mutation removeBroker ($pk: UUID!) {
+        removeInstance (instanceType: BROKER, pk: $pk)
       }
     `, {variables: {id: broker.value.id}})
 
@@ -70,7 +70,7 @@ function saveBroker(event) {
   mut.then(() => router.push("/posrednicy/"))
 }
 function removeBroker() {
-  deleteBrokerMutation().then(router.push("/posrednicy/"))
+  removeBrokerMutation().then(router.push("/posrednicy/"))
 }
 
 </script>

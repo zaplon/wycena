@@ -74,7 +74,7 @@ function filterData(e, column, op) {
           <template v-else>{{ row[col.model] }}</template>
         </td>
         <td v-if="addActionsSlot">
-          <slot name="actions"></slot>
+          <slot :row="row" name="actions"></slot>
         </td>
       </tr>
     </tbody>
