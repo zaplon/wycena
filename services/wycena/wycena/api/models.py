@@ -18,22 +18,14 @@ class PropertyType(enum.Enum):
     COMMERCIAL = "COMMERCIAL"
 
 
-@strawberry.experimental.pydantic.type(model=abstract_models.Client)
+@strawberry.experimental.pydantic.type(model=abstract_models.Client, all_fields=True)
 class Client:
-    id: strawberry.auto
-    name: strawberry.auto
-    street: strawberry.auto
-    building_nr: strawberry.auto
-    apartment_nr: strawberry.auto
-    city: strawberry.auto
+    pass
 
 
-@strawberry.experimental.pydantic.type(model=abstract_models.Broker)
+@strawberry.experimental.pydantic.type(model=abstract_models.Broker, all_fields=True)
 class Broker:
-    id: strawberry.auto
-    name: strawberry.auto
-    phone_number: strawberry.auto
-    notes: strawberry.auto
+    pass
 
 
 @strawberry.experimental.pydantic.type(model=abstract_models.Evaluation)

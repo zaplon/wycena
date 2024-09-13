@@ -13,7 +13,7 @@ class TransactionFactory(SQLAlchemyModelFactory):
         model = models.Transaction
         sqlalchemy_session_persistence = "commit"
 
-    id = factory.lazy_attribute(lambda x: str(uuid.uuid4()))
+    id = factory.lazy_attribute(lambda x: uuid.uuid4())
     type = FuzzyChoice(PropertyType)
     primary_market = factory.Faker('pybool')
     price = factory.Faker('pyint', min_value=500, max_value=1500)

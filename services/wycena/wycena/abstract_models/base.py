@@ -20,7 +20,7 @@ class QueryFilter(BaseModel):
 
 
 class QueryOptions(BaseModel):
-    filters: typing.List[QueryFilter] = None
+    filters: typing.List[QueryFilter] = []
     sort_by: typing.Optional[str] = None
     offset: typing.Optional[int] = None
     page_size: typing.Optional[int] = settings.API_PAGE_SIZE

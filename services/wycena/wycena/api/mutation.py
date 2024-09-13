@@ -30,7 +30,7 @@ class Mutation:
         f = tempfile.NamedTemporaryFile(delete=False, suffix=extension)
         f.write(storage.read(file_pointer))
         f.close()
-        perform_import(f)
+        perform_import(f.name)
         os.unlink(f.name)
         return True
 

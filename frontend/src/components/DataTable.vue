@@ -51,15 +51,17 @@ function filterData(e, column, op) {
       <tr>
         <th v-for="col in columns" :key="col.name">
           <template v-if="col.filterable">
-            <select class="form-select" v-if="col.filterOptions" @change="filterData(col.model)">
+            <select class="form-select form-select-sm" v-if="col.filterOptions" @change="filterData(col.model)">
               <option v-for="o in col.filterOptions" value="o.value" :key="o.value">{{ o.name }}</option>
             </select>
             <template v-else-if="col.rangeFilter">
-              <input type="text" class="form-control range-filter" placeholder="Od" @change="filterData(col.model, 'GREATER_THAN')">
-              <input type="text" class="form-control range-filter ms-1" placeholder="Do" @change="filterData(col.model, 'LOWER_THAN')">
+              <div class="d-flex">
+                <input type="text" class="form-control form-control-sm range-filter" placeholder="Od" @change="filterData(col.model, 'GREATER_THAN')">
+                <input type="text" class="form-control form-control-sm range-filter ms-1" placeholder="Do" @change="filterData(col.model, 'LOWER_THAN')">
+              </div>
             </template>
-            <input type="text" class="form-control" v-else-if="col.type === 'text'" @change="filterData(col.model, 'LIKE')">
-            <input type="number" class="form-control" v-else-if="col.type === 'number'" @change="filterData(col.model)">
+            <input type="text" class="form-control form-control-sm" v-else-if="col.type === 'text'" @change="filterData(col.model, 'LIKE')">
+            <input type="number" class="form-control form-control-sm" v-else-if="col.type === 'number'" @change="filterData(col.model)">
           </template>
         </th>
         <th v-if="addActionsSlot"></th>

@@ -44,6 +44,8 @@ function importTransactions() {
     for (let i = 0; i < data.files.length; i++) {
       formData.append('files', data.files[i])
     }
+    formData.append('city', data.city)
+    formData.append('property_type', data.propertyType)
     const headers = {'Content-Type': 'multipart/form-data'};
     axios.post(`${process.env.VUE_APP_BACKEND_URL}/upload/transactions/`, formData, {headers}).then(() => {
       notify("Transakcje zostały zaimportowane")

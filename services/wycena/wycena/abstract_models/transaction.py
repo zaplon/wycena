@@ -15,6 +15,7 @@ class Transaction(BaseModel, AddressMixin):
     lat: float
     price: int
     area: float
+    built_year: Optional[int] = None
     transaction_date: datetime.date
     district: Optional[str] = ""
     primary_market: Optional[bool] = None

@@ -1,14 +1,10 @@
-from typing import Annotated
-
 import strawberry
-from fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 from strawberry.fastapi import GraphQLRouter
 
-from wycena.api import storage
 from wycena.api.mutation import Mutation
 from wycena.api.query import Query
-from wycena.importer.transaction import perform_import
 
 schema = strawberry.Schema(Query, Mutation)
 
@@ -28,10 +24,3 @@ app.add_middleware(
     allow_headers=["*"],
 )
 app.include_router(graphql_app, prefix="/graphql")
-
-
-@app.post("/upload/transactions/")
-async def upload_transactions(files: list[UploadFile]):
-    for f in files:
-        key = storage.save(file_name=f.filename, data=f.file.read(), prefix="transactions")
-        perform_import(key)
